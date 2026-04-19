@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aissa Sahnoune — Neural Architect | Python & AI Engineer</title>
+<meta name="description" content="Python Automation Engineer & AI Agent Specialist. I don't just write code — I wire intelligence.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<!-- Initial Theme Check to prevent flash -->
+<script>
+  if(localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  if(localStorage.getItem('lang') === 'ar') document.documentElement.dir = 'rtl';
+</script>
+</head>
+<body>
+
+<canvas id="neuralCanvas"></canvas>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">Aissa_Sahnoune<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about" data-i18n="nav.about">About</a></li>
+    <li><a href="#skills" data-i18n="nav.skills">Skills</a></li>
+    <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
+    <li><a href="#ai-vision" data-i18n="nav.ai_vision">AI Vision</a></li>
+    <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button id="theme-btn" class="theme-btn" aria-label="Toggle Theme">🌕</button>
+    <select id="lang-select" class="lang-select">
+      <option value="en">EN</option>
+      <option value="ar">AR</option>
+      <option value="fr">FR</option>
+    </select>
+    <a href="#contact" class="nav-cta" data-i18n="nav.hire">Hire Me</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <p class="hero-eyebrow" data-i18n="hero.eyebrow">Python Engineer · AI Agent Specialist · Morocco</p>
+      <h1 class="hero-title">
+        <span class="line1" data-i18n="hero.line1">Aissa Sahnoune</span>
+        <span class="line2" data-i18n="hero.line2">I wire intelligence.</span>
+      </h1>
+      <p class="hero-subtitle">
+        <span class="typed-line" data-i18n="hero.typed">Building autonomous AI systems & automation pipelines.</span>
+        <span data-i18n="hero.based">Based in Morocco · Available globally.</span>
+      </p>
+      <div class="hero-buttons">
+        <a href="#projects" class="btn-primary" data-i18n="hero.view_projects">View Projects</a>
+        <a href="#contact" class="btn-secondary" data-i18n="hero.start_project">Start a Project →</a>
+      </div>
+    </div>
+    <div class="hero-portrait">
+      <div class="portrait-wrap">
+        <div class="portrait-data">
+          <span class="data-line">SYS: ONLINE</span>
+          <span class="data-line">AI: ACTIVE</span>
+          <span class="data-line">BUILD: 2024</span>
+        </div>
+        <div class="portrait-frame">
+          <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+          <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+          <img src="AI%20PORTRAIT.png" alt="Aissa Sahnoune" class="portrait-img">
+        </div>
+        <div class="portrait-badge" data-i18n="hero.badge">AVAILABLE FOR HIRE</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span data-i18n="hero.scroll">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-grid">
+    <div class="reveal">
+      <p class="section-label" data-i18n="about.label">Who I am</p>
+      <h2 class="section-title"><span data-i18n="about.title_p1">From warehouse</span><br><span style="color:var(--cyan)" data-i18n="about.title_p2">to neural architect.</span></h2>
+      <div class="section-divider"></div>
+      <div id="about-story" class="about-story">
+        <p data-i18n="about.p1">I'm <strong>Aissa Sahnoune</strong>, a 24-year-old self-taught engineer from Morocco. I started managing a warehouse at <span class="highlight">S.A Equipement</span>, spending nights coding what I couldn't afford to buy.</p>
+        <p data-i18n="about.p2">No formal degree. Just <strong>relentless obsession</strong>. I taught myself Python, Flutter, MQL5, and the entire AI ecosystem from scratch.</p>
+        <p data-i18n="about.p3">Today I architect <strong>autonomous AI systems</strong>, Flutter apps, and algorithmic trading systems.</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat-item"><span class="stat-num">5+</span><span class="stat-label" data-i18n="about.stat1">Real Projects</span></div>
+        <div class="stat-item"><span class="stat-num">3+</span><span class="stat-label" data-i18n="about.stat2">Tech Stacks</span></div>
+        <div class="stat-item"><span class="stat-num">∞</span><span class="stat-label" data-i18n="about.stat3">Drive</span></div>
+      </div>
+    </div>
+    <div class="about-manifesto reveal reveal-delay-2">
+      <div class="manifesto-portrait">
+        <div class="manifesto-portrait-inner">
+          <div class="circuit-lines"></div>
+          <img src="AI%20PORTRAIT.png" alt="Aissa Philosophy" class="portrait-img" style="filter: contrast(1.1) brightness(0.8) hue-rotate(-10deg);">
+        </div>
+        <div class="manifesto-quote-overlay">
+          <blockquote class="manifesto-quote">
+            <span data-i18n="about.quote">"L'IA n'est pas l'avenir — c'est l'outil du présent. Celui qui le maîtrise aujourd'hui, façonne demain."</span>
+            <cite>— Aissa Sahnoune</cite>
+          </blockquote>
+        </div>
+      </div>
+      <div class="ai-creed">
+        <p>
+          <span class="cmd">agent</span> = NeuralArchitect(<br>
+          &nbsp;&nbsp;name=<span class="val">"Aissa Sahnoune"</span>,<br>
+          &nbsp;&nbsp;stack=[<span class="val">"Python"</span>, <span class="val">"AI"</span>, <span class="val">"Flutter"</span>],<br>
+          &nbsp;&nbsp;mission=<span class="val">"Automate. Build. Evolve."</span><br>
+          )
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="reveal">
+    <p class="section-label" data-i18n="skills.label">Expertise</p>
+    <h2 class="section-title"><span data-i18n="skills.title">Tech stack &amp; </span><span style="color:var(--cyan)" data-i18n="skills.title_cyan">certifications.</span></h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="skills-layout">
+    <div class="reveal reveal-delay-1">
+      <p class="skills-group-title" data-i18n="skills.group1">// Core Technologies</p>
+      <div class="tech-grid">
+        <!-- Injected via Database -->
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <p class="skills-group-title" data-i18n="skills.group2">// Certifications &amp; Badges</p>
+      <div class="certs-grid">
+        <!-- Injected via Database -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="reveal">
+    <p class="section-label" data-i18n="projects.label">Work</p>
+    <h2 class="section-title"><span data-i18n="projects.title">Real projects, </span><span style="color:var(--cyan)" data-i18n="projects.title_cyan">real results.</span></h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="projects-grid">
+      <!-- Injected via Database -->
+  </div>
+</section>
+
+<section id="ai-vision">
+  <div class="ai-vision-grid">
+    <div class="reveal">
+      <p class="section-label" data-i18n="vision.label">Philosophy</p>
+      <h2 class="ai-vision-title">
+        <span data-i18n="vision.t1">The human who</span><br>
+        <span class="accent" data-i18n="vision.t2">merges with the machine</span><br>
+        <span data-i18n="vision.t3">doesn't become less human.</span>
+      </h2>
+      <div class="section-divider"></div>
+      <div class="ai-principles">
+        <div class="principle">
+          <span class="principle-num">01</span>
+          <div class="principle-text">
+            <p class="principle-title" data-i18n="vision.pr1.val">Force Multiplier</p>
+            <p class="principle-desc" data-i18n="vision.pr1.desc">AI handles the repetitive. Humans handle the vision.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <span class="principle-num">02</span>
+          <div class="principle-text">
+            <p class="principle-title" data-i18n="vision.pr2.val">Real Problems</p>
+            <p class="principle-desc" data-i18n="vision.pr2.desc">Every project I build solves a problem I've lived.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ai-portrait-side reveal reveal-delay-2">
+      <div class="ai-portrait-frame">
+        <div class="ai-portrait-frame-inner">
+          <div class="circuit-lines"></div>
+          <div class="ai-scan-line"></div>
+          <img src="AI%20PORTRAIT.png" alt="Aissa AI" class="portrait-img" style="filter: grayscale(100%) contrast(1.2) sepia(50%) hue-rotate(180deg) saturate(2);">
+        </div>
+        <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="reveal">
+    <p class="contact-intro" data-i18n="contact.intro">// Let's build something</p>
+    <h2 class="contact-heading"><span data-i18n="contact.h1">Ready to wire </span><span>intelligence</span></h2>
+    <div class="contact-links">
+      <a href="mailto:contact@aissasahnoune.dev" class="contact-link">📧 contact@aissasahnoune.dev</a>
+      <a href="https://wa.me/212600000000" class="contact-link" target="_blank">💬 WhatsApp</a>
+      <a href="https://github.com/aissa-sahnoune" class="contact-link" target="_blank">⚡ GitHub</a>
+    </div>
+    <a href="mailto:contact@aissasahnoune.dev" class="contact-cta" data-i18n="nav.hire">Start a Project →</a>
+  </div>
+</section>
+
+<footer>
+  <p data-i18n="footer.text">© 2026 Aissa Sahnoune — Neural Architect</p>
+  <span class="footer-logo">A.S</span>
+</footer>
+
+<script src="js/translations.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Override - Neural Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* ADMIN SPECIFIC STYLES */
+body { overflow: hidden; background: #020508;}
+#login-screen { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, #0a1118 0%, #020508 100%); transition: opacity 0.5s;}
+#login-screen.hidden { opacity: 0; pointer-events: none; }
+.login-box { padding: 40px; border: 1px solid var(--border); box-shadow: 0 0 50px rgba(0,245,255,0.05); text-align: center; width: 100%; max-width: 400px; background: rgba(5,10,14,0.5); backdrop-filter: blur(10px);}
+.login-box h1 { font-family: var(--font-display); color: var(--cyan); margin-bottom: 5px; font-size: 1.5rem; letter-spacing: 0.1em; text-shadow: 0 0 10px var(--cyan-glow);}
+.login-box p { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); margin-bottom: 30px; letter-spacing: 0.2em; text-transform: uppercase;}
+.login-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 12px; color: var(--cyan); font-family: var(--font-mono); outline: none; margin-bottom: 20px; text-align: center; letter-spacing: 0.2em; transition: all 0.3s;}
+.login-input:focus { border-color: var(--cyan); box-shadow: 0 0 15px var(--cyan-dim);}
+.login-btn { width: 100%; padding: 12px; background: var(--cyan); color: #000; border: none; font-family: var(--font-mono); font-weight: 600; cursor: pointer; transition: all 0.3s; text-transform: uppercase; letter-spacing: 0.1em;}
+.login-btn:hover { background: #fff; box-shadow: 0 0 20px var(--cyan-glow);}
+.error-msg { color: #ff4a4a; font-family: var(--font-mono); font-size: 0.65rem; margin-top: 15px; display: none;}
+
+/* Dashboard Layout */
+#dashboard { display: flex; height: 100vh; width: 100%; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+#dashboard.visible { opacity: 1; pointer-events: auto; }
+.sidebar { width: 250px; background: rgba(5,10,14,0.95); border-right: 1px solid var(--border); padding: 20px 0; display: flex; flex-direction: column;}
+.sidebar-logo { padding: 0 20px 30px; font-family: var(--font-display); color: var(--white); font-size: 1.2rem; border-bottom: 1px solid var(--border); margin-bottom: 20px;}
+.sidebar-logo span { color: var(--cyan); font-size: 0.6rem; display: block; font-family: var(--font-mono);}
+.nav-item { padding: 15px 20px; color: var(--muted); font-family: var(--font-mono); font-size: 0.8rem; text-decoration: none; display: block; border-left: 3px solid transparent; transition: all 0.3s; cursor: pointer;}
+.nav-item:hover, .nav-item.active { background: var(--cyan-dim); color: var(--cyan); border-color: var(--cyan); }
+.nav-item i { margin-right: 10px; }
+
+.main-content { flex: 1; overflow-y: auto; padding: 40px; background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdGggZD0iTTAgMGg0MHY0MEgweiIgZmlsbD0ibm9uZSIvPPHBhdGggZD0iTTAgMGgxdjFIMHptMTAgMGgxdjFIMHoiIGZpbGw9InJnYmEoMCwyNDUsMjU1LDAuMDUpIi8+PC9zdmc+') repeat; }
+.header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+.page-title { font-family: var(--font-display); font-size: 2rem; color: var(--white); }
+.add-btn { background: var(--cyan); color: #000; padding: 10px 20px; border: none; font-family: var(--font-mono); cursor: pointer; transition: all 0.3s; font-size:0.8rem; font-weight:600;}
+.add-btn:hover { background: #fff; box-shadow: 0 0 15px var(--cyan); }
+
+/* Data Tables & Cards */
+.data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.admin-card { background: rgba(5,10,14,0.8); border: 1px solid var(--border); padding: 20px; position: relative; }
+.admin-card h3 { color: var(--cyan); font-family: var(--font-display); margin-bottom: 10px; font-size: 1.1rem; }
+.admin-card p { color: var(--muted); font-size: 0.8rem; margin-bottom: 15px; }
+.card-actions { display: flex; gap: 10px; }
+.card-actions button { background: transparent; border: 1px solid var(--muted); color: var(--muted); padding: 5px 10px; font-family: var(--font-mono); font-size: 0.6rem; cursor: pointer; transition: all 0.3s;}
+.card-actions button:hover { border-color: #ff4a4a; color: #ff4a4a; }
+
+/* Dynamic Forms embedded */
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; color: var(--muted); font-family: var(--font-mono); font-size: 0.7rem; margin-bottom: 5px; }
+.form-group input, .form-group textarea { width: 100%; background: transparent; border: 1px solid var(--border); padding: 10px; color: var(--white); font-family: var(--font-body); outline:none; }
+.form-group input:focus, .form-group textarea:focus { border-color: var(--cyan); }
+
+#add-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; }
+#add-overlay.active { display: flex; }
+.form-box { background: var(--bg2); border: 1px solid var(--cyan); padding: 30px; width: 100%; max-width: 500px; max-height:90vh; overflow-y:auto; position:relative;}
+.close-form { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>SYS.OVERRIDE</h1>
+    <p>Aissa.Admin.Protocol</p>
+    <input type="password" id="pass-input" class="login-input" placeholder="ENTER ACCESS CODE" autocomplete="off">
+    <button class="login-btn" onclick="checkAuth()">Authenticate</button>
+    <p class="error-msg" id="error-msg">ACCESS DENIED.</p>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="dashboard">
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      ADMIN PANEL
+      <span>LOCAL_STORAGE_CMS</span>
+    </div>
+    <a class="nav-item active" onclick="switchTab('projects')">🚀 Manage Projects</a>
+    <a class="nav-item" onclick="switchTab('skills')">🧠 Manage Skills</a>
+    <a class="nav-item" onclick="switchTab('certs')">🏅 Manage Certs</a>
+    <div style="flex:1;"></div>
+    <a href="portfolio.html" class="nav-item" style="border-top:1px solid var(--border);">← Back to Live Site</a>
+  </div>
+
+  <div class="main-content">
+    <div class="header-actions">
+      <h2 class="page-title" id="page-title">Projects</h2>
+      <button class="add-btn" onclick="openForm()">+ ADD NEW</button>
+    </div>
+    <div class="data-grid" id="data-grid">
+      <!-- Data injected here -->
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT FORM OVERLAY -->
+<div id="add-overlay">
+  <div class="form-box">
+    <button class="close-form" onclick="closeForm()">&times;</button>
+    <h2 style="color:var(--cyan);font-family:var(--font-display);margin-bottom:20px;" id="form-title">Add Item</h2>
+    
+    <div id="form-fields">
+       <!-- Replaced dynamically based on type -->
+    </div>
+
+    <button class="btn-primary" style="width:100%; border:none; margin-top:10px;" onclick="saveItem()">SAVE TO DATABASE</button>
+    <p style="color:var(--muted); font-size:0.65rem; font-family:var(--font-mono); margin-top:10px;text-align:center;">* Saves to LocalStorage / Database. Will appear dynamically on main site.</p>
+  </div>
+</div>
+
+<script>
+let globalDB = { projects: [], skills: [], certs: [] };
+let editingIndex = null;
+
+const BASE_DB = {
+    "projects": [
+        { "name": "S.A Equipement — Warehouse App", "desc": "Full-stack mobile app for a real Moroccan electrical equipment company...", "tags": "Flutter, Firebase", "icon": "🏭", "link": "pages/projects/sa-equipement.html" },
+        { "name": "JARVIS — AI Assistant", "desc": "A JARVIS-style AI agent accessible via Telegram. Runs on local Ollama LLMs with CrewAI.", "tags": "AI Agent", "icon": "🤖", "link": "pages/projects/jarvis.html" },
+        { "name": "Tawleefa — Luxury E-Commerce", "desc": "Immersive 3D luxury web platform tailored for the modern market.", "tags": "Web, 3D", "icon": "🎁", "link": "pages/projects/tawleefa.html" },
+        { "name": "Gold EA — XAUUSD Bot", "desc": "Expert Advisor for MetaTrader 5 targeting XAUUSD. Custom entry logic and risk management.", "tags": "Algo Trading", "icon": "📈", "link": "pages/projects/goldea.html" }
+    ],
+    "skills": [
+        { "name": "Python", "icon": "🐍", "link": "pages/skills/python.html" }, { "name": "AI Agents", "icon": "🤖", "link": "pages/skills/ai-agents.html" }, { "name": "n8n", "icon": "🔄", "link": "pages/skills/n8n.html" },
+        { "name": "Flutter", "icon": "📱", "link": "pages/skills/flutter.html" }, { "name": "Firebase", "icon": "🔥", "link": "pages/skills/firebase.html" }, { "name": "MQL5", "icon": "📊", "link": "pages/skills/mql5.html" }
+    ],
+    "certs": [
+        { "title": "AI Agent Development", "issuer": "Anthropic / Claude", "icon": "🏅", "link": "pages/certs/anthropic.html" },
+        { "title": "Python Automation", "issuer": "Google / Coursera", "icon": "🏅", "link": "pages/certs/python.html" }
+    ]
+};
+
+function safeParse(key) {
+    try {
+        const val = localStorage.getItem(key);
+        if(!val || val === 'undefined') return [];
+        return JSON.parse(val);
+    } catch(e) { return []; }
+}
+
+async function loadDB() {
+    try {
+        const res = await fetch('database.json', { cache: 'no-store' });
+        if (res.ok) {
+            globalDB = await res.json();
+            renderData();
+        } else {
+            throw new Error("HTTP off");
+        }
+    } catch(e) {
+        console.warn("API/Fetch failed. Running local fallback mapped with BASE_DB.");
+        globalDB.projects = BASE_DB.projects.concat(safeParse('custom_projects'));
+        globalDB.skills = BASE_DB.skills.concat(safeParse('custom_skills'));
+        globalDB.certs = BASE_DB.certs.concat(safeParse('custom_certs'));
+        renderData();
+    }
+}
+
+async function saveDB() {
+    try {
+        const res = await fetch('/api/db', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(globalDB)
+        });
+        if(res.ok) {
+            console.log("Saved to database.json");
+        }
+    } catch (e) {
+        console.warn("API save failed. Saving to localStorage as fallback.");
+        localStorage.setItem('custom_projects', JSON.stringify(globalDB.projects));
+        localStorage.setItem('custom_skills', JSON.stringify(globalDB.skills));
+        localStorage.setItem('custom_certs', JSON.stringify(globalDB.certs));
+    }
+}
+
+// Authentication Logic
+const AUTH_TOKEN = "session_active";
+const SECRET = "neural"; // Basic obfuscation
+
+// Check if already logged in via Session
+if(sessionStorage.getItem('admin_auth') === AUTH_TOKEN) {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('dashboard').classList.add('visible');
+    loadDB();
+}
+
+function checkAuth() {
+    const input = document.getElementById('pass-input').value;
+    if(input === SECRET || input === 'admin') {
+        sessionStorage.setItem('admin_auth', AUTH_TOKEN);
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('dashboard').classList.add('visible');
+        loadDB();
+    } else {
+        document.getElementById('error-msg').style.display = 'block';
+    }
+}
+document.getElementById('pass-input').addEventListener('keypress', function(e) {
+    if(e.key === 'Enter') checkAuth();
+});
+
+// App State
+let currentTab = 'projects';
+
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    
+    const titles = { 'projects': 'Projects', 'skills': 'Skills', 'certs': 'Certifications' };
+    document.getElementById('page-title').innerText = titles[tab];
+    
+    renderData();
+}
+
+function renderData() {
+    const container = document.getElementById('data-grid');
+    container.innerHTML = '';
+    const items = globalDB[currentTab] || [];
+    
+    if(items.length === 0) {
+        container.innerHTML = `<p style="color:var(--muted);font-family:var(--font-mono);">No custom ${currentTab} found. Click ADD NEW.</p>`;
+        return;
+    }
+
+    items.forEach((item, index) => {
+        let displayTitle = item.name || item.title || "Unnamed";
+        let displayDesc = item.desc || item.issuer || "No description";
+        
+        container.innerHTML += `
+        <div class="admin-card">
+            <h3>${displayTitle}</h3>
+            <p>${displayDesc}</p>
+            <div class="card-actions">
+                <button style="border-color:var(--cyan); color:var(--cyan);" onclick="editItem(${index})">EDIT</button>
+                <button onclick="deleteItem(${index})">DELETE</button>
+            </div>
+        </div>`;
+    });
+}
+
+function openForm(isEdit = false) {
+    if(!isEdit) editingIndex = null;
+    const formFields = document.getElementById('form-fields');
+    document.getElementById('form-title').innerText = (isEdit ? "Edit " : "Add New ") + currentTab.replace(/s$/,'').toUpperCase();
+    
+    if(currentTab === 'projects') {
+        formFields.innerHTML = `
+            <div class="form-group"><label>Project Name/Title</label><input type="text" id="p-name" placeholder="e.g. JARVIS System"></div>
+            <div class="form-group"><label>Category Tags</label><input type="text" id="p-tags" placeholder="AI Agent, Python"></div>
+            <div class="form-group"><label>Icon Emoji</label><input type="text" id="p-icon" placeholder="🚀" value="🚀"></div>
+            <div class="form-group"><label>Description</label><textarea id="p-desc" rows="3" placeholder="Overview of the system..."></textarea></div>
+            <div class="form-group"><label>Image URL (Optional)</label><input type="text" id="p-image" placeholder="assets/tawleefa.png or https://..."></div>
+            <div class="form-group"><label>Video URL (Optional)</label><input type="text" id="p-video" placeholder="assets/demo.mp4 or https://..."></div>
+            <div class="form-group"><label>Link URL (Optional)</label><input type="text" id="p-link" placeholder="pages/projects/... or https://..."></div>
+        `;
+    } else if(currentTab === 'skills') {
+        formFields.innerHTML = `
+            <div class="form-group"><label>Skill Name</label><input type="text" id="s-name" placeholder="e.g. Docker"></div>
+            <div class="form-group"><label>Icon (Emoji)</label><input type="text" id="s-icon" placeholder="🐳" value="🐳"></div>
+            <div class="form-group"><label>Image URL (Optional)</label><input type="text" id="s-image" placeholder="assets/img.png"></div>
+            <div class="form-group"><label>Video URL (Optional)</label><input type="text" id="s-video" placeholder="assets/vid.mp4"></div>
+            <div class="form-group"><label>Link URL (Optional)</label><input type="text" id="s-link" placeholder="https://..."></div>
+        `;
+    } else if(currentTab === 'certs') {
+        formFields.innerHTML = `
+            <div class="form-group"><label>Certification Name</label><input type="text" id="c-name" placeholder="e.g. AWS Cloud Practitioner"></div>
+            <div class="form-group"><label>Issuer</label><input type="text" id="c-issuer" placeholder="e.g. Amazon Web Services"></div>
+            <div class="form-group"><label>Icon (Emoji)</label><input type="text" id="c-icon" placeholder="🏅" value="🏅"></div>
+            <div class="form-group"><label>Image URL (Optional)</label><input type="text" id="c-image" placeholder="Certificate Image URL"></div>
+            <div class="form-group"><label>Video URL (Optional)</label><input type="text" id="c-video" placeholder="Video Evidence URL"></div>
+            <div class="form-group"><label>Link URL (Optional)</label><input type="text" id="c-link" placeholder="Verification URL"></div>
+        `;
+    }
+    
+    document.getElementById('add-overlay').classList.add('active');
+}
+
+function editItem(index) {
+    editingIndex = index;
+    openForm(true);
+    let item = globalDB[currentTab][index];
+    
+    if(currentTab === 'projects') {
+        document.getElementById('p-name').value = item.name || '';
+        document.getElementById('p-tags').value = item.tags || '';
+        document.getElementById('p-icon').value = item.icon || '';
+        document.getElementById('p-desc').value = item.desc || '';
+        document.getElementById('p-image').value = item.image || '';
+        document.getElementById('p-video').value = item.video || '';
+        document.getElementById('p-link').value = item.link || '';
+    } else if(currentTab === 'skills') {
+        document.getElementById('s-name').value = item.name || '';
+        document.getElementById('s-icon').value = item.icon || '';
+        document.getElementById('s-image').value = item.image || '';
+        document.getElementById('s-video').value = item.video || '';
+        document.getElementById('s-link').value = item.link || '';
+    } else if(currentTab === 'certs') {
+        document.getElementById('c-name').value = item.title || '';
+        document.getElementById('c-issuer').value = item.issuer || '';
+        document.getElementById('c-icon').value = item.icon || '';
+        document.getElementById('c-image').value = item.image || '';
+        document.getElementById('c-video').value = item.video || '';
+        document.getElementById('c-link').value = item.link || '';
+    }
+}
+
+function closeForm() {
+    document.getElementById('add-overlay').classList.remove('active');
+}
+
+async function saveItem() {
+    let newItem = {};
+    if(currentTab === 'projects') {
+        newItem = { 
+            name: document.getElementById('p-name').value, 
+            tags: document.getElementById('p-tags').value, 
+            icon: document.getElementById('p-icon').value, 
+            desc: document.getElementById('p-desc').value,
+            image: document.getElementById('p-image').value,
+            video: document.getElementById('p-video').value,
+            link: document.getElementById('p-link').value
+        };
+    } else if(currentTab === 'skills') {
+        newItem = { 
+            name: document.getElementById('s-name').value, 
+            icon: document.getElementById('s-icon').value,
+            image: document.getElementById('s-image').value,
+            video: document.getElementById('s-video').value,
+            link: document.getElementById('s-link').value 
+        };
+    } else if(currentTab === 'certs') {
+        newItem = { 
+            title: document.getElementById('c-name').value, 
+            issuer: document.getElementById('c-issuer').value,
+            icon: document.getElementById('c-icon').value,
+            image: document.getElementById('c-image').value,
+            video: document.getElementById('c-video').value,
+            link: document.getElementById('c-link').value
+        };
+    }
+    
+    if (!globalDB[currentTab]) globalDB[currentTab] = [];
+    
+    if(editingIndex !== null) {
+        globalDB[currentTab][editingIndex] = newItem;
+        editingIndex = null;
+    } else {
+        globalDB[currentTab].push(newItem);
+    }
+    
+    await saveDB();
+    closeForm();
+    renderData();
+}
+
+async function deleteItem(index) {
+    if(confirm("Are you sure you want to delete this?")) {
+        globalDB[currentTab].splice(index, 1);
+        await saveDB();
+        renderData();
+    }
+}
+</script>
+</body>
+</html>

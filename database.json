@@ -1,0 +1,78 @@
+{
+    "projects": [
+        {
+            "name": "S.A Equipement — Warehouse App",
+            "desc": "Full-stack mobile app for a real Moroccan electrical equipment company...",
+            "tags": "Flutter, Firebase",
+            "icon": "🏭",
+            "link": "pages/projects/sa-equipement.html"
+        },
+        {
+            "name": "JARVIS — AI Assistant",
+            "desc": "A JARVIS-style AI agent accessible via Telegram. Runs on local Ollama LLMs with CrewAI.",
+            "tags": "AI Agent",
+            "icon": "🤖",
+            "link": "pages/projects/jarvis.html"
+        },
+        {
+            "name": "Tawleefa — Luxury E-Commerce",
+            "desc": "Immersive 3D luxury web platform tailored for the modern market.",
+            "tags": "Web, 3D",
+            "icon": "🎁",
+            "link": "pages/projects/tawleefa.html"
+        },
+        {
+            "name": "Gold EA — XAUUSD Bot",
+            "desc": "Expert Advisor for MetaTrader 5 targeting XAUUSD. Custom entry logic and risk management.",
+            "tags": "Algo Trading",
+            "icon": "📈",
+            "link": "pages/projects/goldea.html"
+        }
+    ],
+    "skills": [
+        {
+            "name": "Python",
+            "icon": "🐍",
+            "link": "pages/skills/python.html"
+        },
+        {
+            "name": "AI Agents",
+            "icon": "🤖",
+            "link": "pages/skills/ai-agents.html"
+        },
+        {
+            "name": "n8n",
+            "icon": "🔄",
+            "link": "pages/skills/n8n.html"
+        },
+        {
+            "name": "Flutter",
+            "icon": "📱",
+            "link": "pages/skills/flutter.html"
+        },
+        {
+            "name": "Firebase",
+            "icon": "🔥",
+            "link": "pages/skills/firebase.html"
+        },
+        {
+            "name": "MQL5",
+            "icon": "📊",
+            "link": "pages/skills/mql5.html"
+        }
+    ],
+    "certs": [
+        {
+            "title": "AI Agent Development",
+            "issuer": "Anthropic / Claude",
+            "icon": "🏅",
+            "link": "pages/certs/anthropic.html"
+        },
+        {
+            "title": "Python Automation",
+            "issuer": "Google / Coursera",
+            "icon": "🏅",
+            "link": "pages/certs/python.html"
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aissa Sahnoune — Detail View</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/style.css">
+<script>
+  if(localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  if(localStorage.getItem('lang') === 'ar') document.documentElement.dir = 'rtl';
+</script>
+</head>
+<body>
+
+<canvas id="neuralCanvas"></canvas>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="navbar">
+  <a href="../../portfolio.html" class="nav-logo">Aissa<span>.</span></a>
+  <div class="nav-actions" style="margin-left:auto;">
+    <button id="theme-btn" class="theme-btn" aria-label="Toggle Theme">🌕</button>
+    <select id="lang-select" class="lang-select">
+      <option value="en">EN</option>
+      <option value="ar">AR</option>
+      <option value="fr">FR</option>
+    </select>
+  </div>
+</nav>
+
+<section class="page-section">
+    <div class="detail-header reveal">
+        <h1 class="detail-title" data-i18n="pages.flutter.title">Flutter</h1>
+        <div class="detail-meta">
+            <span class="stack-tag">Skill Overview</span>
+        </div>
+    </div>
+    
+    <div class="detail-content reveal reveal-delay-1">
+        <a href="../../portfolio.html" class="back-btn" data-i18n="nav.back">← Back to Home</a>
+        <h3 data-i18n="pages.flutter.h3">Overview</h3>
+        <p data-i18n="pages.flutter.p1">Detailed description goes here...</p>
+        <h3 data-i18n="pages.flutter.h3_2">Details</h3>
+        <p data-i18n="pages.flutter.p2">Further information goes here...</p>
+    </div>
+</section>
+
+<footer>
+  <p data-i18n="footer.text">© 2026 Aissa Sahnoune — Neural Architect</p>
+  <span class="footer-logo">A.S</span>
+</footer>
+
+<script src="../../js/translations.js"></script>
+<script src="../../js/main.js"></script>
+</body>
+</html>

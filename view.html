@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Neural View</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+.media-container { width: 100%; max-width: 900px; margin: 2rem auto; border: 1px solid var(--border); background: var(--bg2); padding: 10px;}
+.media-container img, .media-container video { width: 100%; display: block; border-radius: 4px; border: 1px solid var(--border); }
+.detail-box { background: rgba(5,10,14,0.7); backdrop-filter: blur(10px); padding: 2rem; border: 1px solid var(--border); max-width: 900px; margin: 0 auto 3rem;}
+</style>
+<script>
+  if(localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  if(localStorage.getItem('lang') === 'ar') document.documentElement.dir = 'rtl';
+</script>
+</head>
+<body>
+<canvas id="neuralCanvas"></canvas>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="navbar">
+  <a href="portfolio.html" class="nav-logo">Aissa_Sahnoune<span>.</span></a>
+  <div class="nav-actions" style="margin-left:auto;">
+    <button id="theme-btn" class="theme-btn" aria-label="Toggle Theme">🌕</button>
+  </div>
+</nav>
+
+<section class="page-section" id="dynamic-view">
+    <div style="text-align:center; padding: 100px 0;">
+        <p style="font-family:var(--font-mono); color:var(--cyan);">SYNCING DATA...</p>
+    </div>
+</section>
+
+<footer>
+  <p>© 2026 Aissa Sahnoune — Neural Architect</p>
+</footer>
+
+<script>
+async function initView() {
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get('type') || 'projects';
+    const idx = parseInt(params.get('idx') || '0');
+    
+    let globalDB = null;
+    try {
+        const res = await fetch('database.json', { cache: 'no-store' });
+        if(res.ok) {
+            globalDB = await res.json();
+        }
+    } catch(e) {
+        console.warn("DB offline, falling back.");
+    }
+    
+    // Fallback if needed
+    if(!globalDB) globalDB = {
+        projects: JSON.parse(localStorage.getItem('custom_projects') || '[]'),
+        skills: JSON.parse(localStorage.getItem('custom_skills') || '[]'),
+        certs: JSON.parse(localStorage.getItem('custom_certs') || '[]')
+    };
+
+    const item = globalDB[type] ? globalDB[type][idx] : null;
+    const viewSection = document.getElementById('dynamic-view');
+
+    if(!item) {
+        viewSection.innerHTML = `
+            <div class="detail-header">
+                <h1 class="detail-title" style="color:red;">DATA NOT FOUND</h1>
+                <a href="portfolio.html" class="back-btn">← RETURN</a>
+            </div>`;
+        return;
+    }
+
+    const title = item.name || item.title || 'Data Node';
+    const desc = item.desc || item.issuer || 'No further data available.';
+    let mediaHTML = '';
+
+    if (item.video && item.video.trim() !== '') {
+        mediaHTML += `<div class="media-container"><video src="${item.video}" autoplay loop muted controls></video></div>`;
+    } else if (item.image && item.image.trim() !== '') {
+        mediaHTML += `<div class="media-container"><img src="${item.image}" alt="${title}"></div>`;
+    }
+
+    viewSection.innerHTML = `
+        <div class="detail-header reveal visible">
+            <h1 class="detail-title">${title}</h1>
+            <div class="detail-meta">
+                <span class="stack-tag">${type.toUpperCase()}</span>
+                ${item.tags ? item.tags.split(',').map(t => `<span class="stack-tag">${t.trim()}</span>`).join('') : ''}
+            </div>
+        </div>
+        
+        ${mediaHTML}
+
+        <div class="detail-content detail-box reveal visible">
+            <h3 style="color:var(--cyan);font-family:var(--font-display);margin-bottom:1rem;">DATABASE RECORD</h3>
+            <p>${desc}</p>
+        </div>
+        
+        <div style="text-align:center;">
+             <a href="portfolio.html" class="back-btn" style="background:var(--cyan); color:#000; font-weight:bold;">← BACK TO HOME</a>
+        </div>
+    `;
+}
+initView();
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>
